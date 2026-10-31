@@ -79,6 +79,56 @@ Session identity, persistence, resumption, and termination semantics are harness
 
 A Session is not, by itself, the authoritative record of an Actor's lifecycle or Tradecraft's durable orchestration state. The [Lamp](#lamp) mediates mappings between Tradecraft identities and harness-native Session identities.
 
+### Team
+
+A **Team** is an organizational unit accountable for the stewardship of one or more [Systems](#system). It establishes a shared boundary for membership, governance, and the policies applicable to the systems under its responsibility.
+
+A Team provides the organizational context in which work is authorized and reviewed. Its policies may address access control, model and harness selection, tool availability, information handling, resource consumption, and human oversight. Component specifications define how those policies are represented, inherited, and enforced.
+
+Team membership describes organizational participation; it does not, by itself, grant an [Actor](#actor) authority to act on a member's behalf. A Team is also distinct from a temporary group of collaborating Actors: collaboration is an execution arrangement, whereas a Team expresses continuing organizational responsibility.
+
+### System
+
+A **System** is a coherent set of software, services, data, and operational resources maintained to deliver an ongoing capability. It is the enduring subject of ownership, operation, and change within Tradecraft.
+
+A System may encompass multiple repositories, deployable components, integrations, and execution environments. Its boundary follows the capability and operational responsibilities it represents, rather than necessarily coinciding with a repository or deployment boundary. A [Team](#team) provides the organizational context for its stewardship and applicable policies.
+
+Some organizations use *project* to denote this persistent collection of technical assets. Tradecraft uses **System** for the maintained capability and [Project](#project) for a planned undertaking that introduces or changes capabilities. A System can therefore persist across many Projects and continue to require maintenance outside any particular Project.
+
+### Project
+
+A **Project** is a planned undertaking organized around a defined objective, scope, and criteria for completion. It provides a coordination boundary for related work and expresses the outcome that work is intended to achieve.
+
+A Project may create a [System](#system), extend an existing one, coordinate changes across several Systems, or pursue an investigative outcome without producing a deployable capability. Its scope may include [Features](#feature), [User Stories](#user-story), and [Tasks](#task), together with dependencies and constraints relevant to delivery.
+
+Project identity is distinct from System identity: the undertaking can conclude while the resulting System remains in operation. A Project is likewise distinct from a workspace, repository, or harness [Session](#session); these may support its work without defining its scope or completion.
+
+### Feature
+
+A **Feature** is a coherent capability or observable aspect of behavior that contributes to a [Project's](#project) intended outcome. It describes what a System enables for a user, another system, or an operational stakeholder, at a level suitable for planning and evaluating related work.
+
+A Feature may be elaborated through multiple [User Stories](#user-story) and implemented through multiple [Tasks](#task). Its description should identify the intended benefit, relevant constraints, and evidence by which the capability can be evaluated. For AI-enabled capabilities, that evidence may include behavioral evaluations and expectations for human oversight, alongside conventional functional acceptance criteria.
+
+A Feature is distinct from the implementation component that supports it. One Feature may require changes across several components, and one component may support several Features.
+
+### User Story
+
+A **User Story** is a concise description of a desired experience or use case from the perspective of an identified user or stakeholder. It connects an intended capability to the context in which it is needed and the value it is expected to provide.
+
+A User Story typically elaborates a [Feature](#feature) and is accompanied by acceptance criteria that make the expected behavior assessable. The familiar role–goal–benefit format is one possible expression, rather than a required syntax. The essential distinction is between the stakeholder's intended experience and the implementation work needed to support it.
+
+A User Story may require several [Tasks](#task), including implementation, evaluation, documentation, or validation. When the experience involves AI-generated behavior, its acceptance criteria should identify relevant operating conditions and observable quality expectations without assuming that every model response will be identical.
+
+### Task
+
+A **Task** is a bounded unit of work with a stated objective and an assessable completion condition. It is the unit through which an intention is translated into work that can be assigned, performed, and reviewed.
+
+A Task may implement part of a [User Story](#user-story), contribute directly to a [Feature](#feature) or [Project](#project), address a defect or operational problem in a [System](#system), or stand independently. These associations provide context; they do not require every Task to belong to a complete planning hierarchy.
+
+A Task description may specify inputs, expected outputs, dependencies, constraints, acceptance criteria, and conditions requiring human review. For agentic work, a clear completion condition distinguishes producing a plausible response from delivering a result that can be evaluated against the requested objective.
+
+A Task describes the work to be done; an [Actor](#actor) represents an instantiated workload carrying out that work, and an [Execution](#execution) records a particular attempt. Retrying an Execution does not, by itself, create a new Task. Task decomposition and assignment semantics are defined by the relevant orchestration specifications.
+
 ## Conceptual Relationships
 
 | Concept | Architectural nature | Primary responsibility |
@@ -91,7 +141,20 @@ A Session is not, by itself, the authoritative record of an Actor's lifecycle or
 | **Lamp** | Vendor/harness integration SDK | Translates Tradecraft control and observation operations to harness-specific mechanisms. |
 | **Lamplighter** | Environment provisioner | Prepares and validates the resources and configuration required for execution. |
 
-A typical relationship is:
+The organizational and work-planning terms describe a complementary set of relationships:
+
+| Concept | Primary role | Relationship to other concepts |
+| --- | --- | --- |
+| **Team** | Organizational accountability and policy | Stewards one or more Systems. |
+| **System** | Maintained capability | Persists across Projects and receives ongoing operational work. |
+| **Project** | Planned undertaking | Coordinates work toward an outcome that may affect one or more Systems. |
+| **Feature** | Capability or observable behavior | Contributes to a Project outcome and may be elaborated through User Stories. |
+| **User Story** | Stakeholder experience and value | Describes a use case that may require multiple Tasks. |
+| **Task** | Assignable unit of work | May relate to a User Story, Feature, Project, or System, or stand independently. |
+
+These relationships are conceptual rather than a mandatory containment hierarchy. They distinguish organizational responsibility, maintained capabilities, planned outcomes, and executable work without prescribing a particular delivery methodology.
+
+A typical execution relationship is:
 
 ```text
 Agent specification
