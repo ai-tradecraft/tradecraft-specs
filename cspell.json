@@ -36,6 +36,10 @@
   // Keep sorted and lowercase-insensitive; cspell matching is case-insensitive
   // here, so one entry covers "Tradecraft" and "tradecraft".
   "words": [
+    // Suffixes separated from their initial letters by bold LAMP formatting.
+    "etadata",
+    "iaison",
+    "latforms",
     "tradecraft"
   ]
 }
