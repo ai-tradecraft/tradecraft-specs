@@ -1,0 +1,41 @@
+// cspell configuration — the dictionary half of this repo's markdown spell
+// check. The hook that runs it is defined in .pre-commit-config.yaml; see the
+// comment there for why two spell checkers exist and how they divide the work.
+//
+// cspell reads JSON with comments, so the reasoning lives next to the setting.
+{
+  "version": "0.2",
+
+  // en = en-US. British spellings ("behaviour", "organise") are therefore
+  // flagged, which keeps the specs internally consistent. Add "en-GB" here to
+  // accept both, or switch to it outright to standardise on British spelling.
+  "language": "en",
+
+  // Regions excluded from DICTIONARY checking. Everything excluded here is
+  // still swept by codespell's known-typo list, so these are not blind spots —
+  // they are places where a dictionary is the wrong tool, because the "words"
+  // are identifiers.
+  //
+  // Not listed, because cspell already handles it: bare URLs are ignored by
+  // default. Verified — a URL of pure gibberish raises nothing.
+  "ignoreRegExpList": [
+    // Fenced code blocks (```...```). Shell commands, JSON keys and resource
+    // names are not English and should not be judged as English.
+    "/^\\s*```[\\s\\S]*?^\\s*```/gm",
+
+    // Inline code spans (`kubectl apply -f x.yaml`). Same reasoning. Prose
+    // that needs checking does not belong in backticks.
+    "/`[^`\\n]+`/g",
+
+    // Markdown link/image TARGETS only — the `](...)` half. Link text stays
+    // checked, since that is prose the reader actually sees.
+    "/\\]\\([^)]*\\)/g"
+  ],
+
+  // Project vocabulary: correctly-spelled words absent from the dictionaries.
+  // Keep sorted and lowercase-insensitive; cspell matching is case-insensitive
+  // here, so one entry covers "Tradecraft" and "tradecraft".
+  "words": [
+    "tradecraft"
+  ]
+}
