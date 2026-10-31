@@ -41,6 +41,49 @@ repos:
     -   id: detect-private-key
     -   id: fix-byte-order-marker
     -   id: mixed-line-ending
+  # SPELL CHECKING MARKDOWN — TWO TOOLS, ON PURPOSE
+  # -----------------------------------------------
+  # This repo's product is prose, so both hooks below are scoped to
+  # `types: [markdown]`. They are complementary, not redundant:
+  #
+  #   codespell matches a curated list of ~40k known typos ("teh", "definately")
+  #     against the WHOLE file, code blocks included. It cannot invent a
+  #     correction, so it is safe to point at code and effectively never fires
+  #     falsely — but it only knows typos someone has already catalogued.
+  #
+  #   cspell checks every word against a real dictionary, so it also catches
+  #     one-off misspellings codespell has never heard of. That power is also
+  #     its cost: pointed at code it flags identifiers, CLI flags and JSON
+  #     keys, so cspell.json excludes code spans and fenced blocks and checks
+  #     prose only.
+  #
+  # Net effect: prose gets full dictionary coverage, code blocks still get the
+  # high-confidence typo sweep, and neither hook blocks a PR over an
+  # identifier. To spell-check every text file and not just markdown (YAML
+  # comments, shell scripts, the Makefile), drop the `types` override.
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.4.3
+    hooks:
+      - id: codespell
+        types: [markdown]
+        # No ignore list yet because nothing in this repo trips codespell. When
+        # something legitimately does, add a `.codespellrc` with
+        # `ignore-words-list = word1,word2` rather than weakening the hook;
+        # that file takes INI comments, so record WHY each word is there.
+  - repo: https://github.com/streetsidesoftware/cspell-cli
+    rev: v10.4.0
+    hooks:
+      - id: cspell
+        types: [markdown]
+        # Upstream's `args` end in `--files`, which must stay last for paths to
+        # be passed correctly — so this hook deliberately does not override
+        # `args`. All tuning lives in cspell.json instead.
+        #
+        # Node runtime pinned for the same reason CI pins Python: without it
+        # pre-commit silently uses whatever `node` is on PATH, so the checker
+        # runs on a different runtime per machine. Bump deliberately; remove
+        # this line to use the system node instead.
+        language_version: "24.22.2"
   - repo: https://github.com/gitleaks/gitleaks
     rev: v8.30.1  # Specify the desired version of Gitleaks
     hooks:
